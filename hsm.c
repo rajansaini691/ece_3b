@@ -30,12 +30,9 @@ QState hsm_listen(hsm *mcn) {
 			return Q_HANDLED();
 		case Q_EXIT_SIG:
 			return Q_HANDLED();
-		case LEFT_SIG:
+		case D_SIG:
 			return Q_TRAN(hsm_oct_cfg);
-		case RIGHT_SIG:
-			return Q_TRAN(hsm_oct_cfg);
-		case ENC_BTN_SIG:
-			// TODO Debug debouncing
+		case C_SIG:
 			return Q_TRAN(hsm_tun_cfg);
 		case TICK_SIG:
 			// Draw colored word
@@ -77,14 +74,15 @@ QState hsm_tun_cfg(hsm *mcn) {
 			if(mcn->tuning > 420) {
 				mcn->tuning--;
 				// TODO Draw bar
-				xil_printf("A = %d\n\r", mcn->tuning);
+
+				xil_printf("%d\n\r", mcn->tuning);
 			}
 			break;
 		case RIGHT_SIG:
 			if(mcn->tuning < 460) {
 				mcn->tuning++;
 				// TODO Draw bar
-				xil_printf("A = %d\n\r", mcn->tuning);
+				xil_printf("%d\n\r", mcn->tuning);
 			}
 			break;
 	}
@@ -98,7 +96,7 @@ QState hsm_oct_cfg(hsm *mcn) {
 			if(mcn->octave > 0) {
 				mcn->octave--;
 				// TODO Draw bar
-				xil_printf("Octave: %d\n\r", mcn->octave);
+				xil_printf("%d\n\r", mcn->octave);
 
 			}
 			break;
@@ -106,8 +104,9 @@ QState hsm_oct_cfg(hsm *mcn) {
 			if(mcn->octave < 9) {
 				mcn->octave++;
 				// TODO Draw bar
-				xil_printf("Octave: %d\n\r", mcn->octave);
 
+				// TODO Draw bar
+				xil_printf("%d\n\r", mcn->octave);
 			}
 			break;
 	}

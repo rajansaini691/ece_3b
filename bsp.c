@@ -104,38 +104,27 @@ void btn_handler(void *baseaddr_p) {
 	switch(dsr) {
 		case 0x01:
 			// SIG A
-			if(btn_state != BTN_A) {
-				QActive_postISR((QActive *) &machine, A_SIG);
-				btn_state = BTN_A;
-			}
+			QActive_postISR((QActive *) &machine, A_SIG);
 			break;
 		case 0x02:
 			// SIG B
-			if(btn_state != BTN_B) {
-				QActive_postISR((QActive *) &machine, B_SIG);
-				btn_state = BTN_B;
-			}
+			QActive_postISR((QActive *) &machine, B_SIG);
+			btn_state = BTN_B;
 			break;
 		case 0x04:
 			// SIG C
-			if(btn_state != BTN_C) {
-				QActive_postISR((QActive *) &machine, C_SIG);
-				btn_state = BTN_C;
-			}
+			QActive_postISR((QActive *) &machine, C_SIG);
+			btn_state = BTN_C;
 			break;
 		case 0x08:
 			// SIG D
-			if(btn_state != BTN_D) {
-				QActive_postISR((QActive *) &machine, D_SIG);
-				btn_state = BTN_D;
-			}
+			QActive_postISR((QActive *) &machine, D_SIG);
+			btn_state = BTN_D;
 		break;
 		case 0x10:
 			// SIG E
-			if(btn_state != BTN_E) {
-				QActive_postISR((QActive *) &machine, E_SIG);
-				btn_state = BTN_E;
-			}
+			QActive_postISR((QActive *) &machine, E_SIG);
+			btn_state = BTN_E;
 			break;
 		default:
 			xil_printf("Invalid btn code %d\n\r", dsr);
