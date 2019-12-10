@@ -2,7 +2,7 @@
 #define hsm_h
 void hsm_ctor(void);
 // 2 seconds  * ticks per second
-#define INACTIVE_TICKS (2 * 5)
+#define CFG_TIMEOUT (2 * 5)
 
 
 enum hsm_sig {
