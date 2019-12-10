@@ -4,7 +4,7 @@
 #include "hsm.h"
 
 static QState hsm_init(hsm *mcn);
-static QState hsm_on(hsm *mcn);
+static QState hsm_listen(hsm *mcn);
 static QState hsm_oct_cfg(hsm *mcn);
 static QState hsm_tun_cfg(hsm *mcn);
  
@@ -18,26 +18,15 @@ void hsm_ctor(void)  {
 
 QState hsm_init(hsm *mcn) {
 	xil_printf("Initializing HSM\r\n");
-	return Q_TRAN(&hsm_on);
-}
-
-QState hsm_on(hsm *mcn) {
-	switch (Q_SIG(mcn)) {
-		case Q_ENTRY_SIG:
-			drw_clr(0, 0, LCD_WIDTH, LCD_HEIGHT);
-		case Q_INIT_SIG:
-			return Q_HANDLED();
-		case TICK_SIG:
-			return Q_HANDLED();
-		case ENC_BTN_SIG:
-			return Q_HANDLED();
-	}
-	return Q_SUPER(&QHsm_top);
+	return Q_TRAN(&hsm_listen);
 }
 
 QState hsm_listen(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case Q_ENTRY_SIG:
+			// TODO Draw on program entry, not every time we go back
+			// to this state
+			drw_clr(0, 0, LCD_WIDTH, LCD_HEIGHT);
 			return Q_HANDLED();
 		case Q_EXIT_SIG:
 			return Q_HANDLED();
@@ -46,6 +35,7 @@ QState hsm_listen(hsm *mcn) {
 		case RIGHT_SIG:
 			return Q_TRAN(hsm_oct_cfg);
 		case ENC_BTN_SIG:
+			// TODO Debug debouncing
 			return Q_TRAN(hsm_tun_cfg);
 		case TICK_SIG:
 			// Draw colored word
@@ -53,7 +43,7 @@ QState hsm_listen(hsm *mcn) {
 			// Wait 50 ms (simulate FFT)
 			return Q_HANDLED();
 	}
-	return Q_SUPER(&hsm_on);
+	return Q_SUPER(&QHsm_top);
 }
 
 QState hsm_configure(hsm *mcn) {
@@ -77,7 +67,7 @@ QState hsm_configure(hsm *mcn) {
 			}
 			return Q_HANDLED();
 	}
-	return Q_SUPER(&hsm_on);
+	return Q_SUPER(&QHsm_top);
 }
 
 // Configure tuning frequency
@@ -87,14 +77,16 @@ QState hsm_tun_cfg(hsm *mcn) {
 			if(mcn->tuning > 420) {
 				mcn->tuning--;
 				// TODO Draw bar
-
+				xil_printf("A = %d\n\r", mcn->tuning);
 			}
+			break;
 		case RIGHT_SIG:
 			if(mcn->tuning < 460) {
 				mcn->tuning++;
 				// TODO Draw bar
-
+				xil_printf("A = %d\n\r", mcn->tuning);
 			}
+			break;
 	}
 	return Q_SUPER(hsm_configure);
 }
@@ -103,17 +95,21 @@ QState hsm_tun_cfg(hsm *mcn) {
 QState hsm_oct_cfg(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case LEFT_SIG:
-			if(mcn->octave > 420) {
+			if(mcn->octave > 0) {
 				mcn->octave--;
 				// TODO Draw bar
+				xil_printf("Octave: %d\n\r", mcn->octave);
 
 			}
+			break;
 		case RIGHT_SIG:
-			if(mcn->octave < 460) {
+			if(mcn->octave < 9) {
 				mcn->octave++;
 				// TODO Draw bar
+				xil_printf("Octave: %d\n\r", mcn->octave);
 
 			}
+			break;
 	}
 	return Q_SUPER(hsm_configure);
 }
