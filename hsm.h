@@ -20,8 +20,10 @@ enum hsm_sig {
 typedef struct hsmTag {               //Lab2A State machine
 	QActive super_; // inheritance from QP
 	uint32_t disp_tmr; // display timer
-	uint8_t vol;
-	char* txt;
+	char* note;
+	uint16_t ticks;
+	uint8_t octave;
+	uint32_t tuning;
 } hsm;
 
 hsm machine;
