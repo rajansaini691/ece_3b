@@ -31,7 +31,6 @@ QState hsm_on(hsm *mcn) {
 			return Q_HANDLED();
 		case ENC_BTN_SIG:
 			return Q_HANDLED();
-
 	}
 	return Q_SUPER(&QHsm_top);
 }
@@ -71,7 +70,7 @@ QState hsm_configure(hsm *mcn) {
 			mcn->ticks = 0;
 			return Q_HANDLED();
 		case TICK_SIG:
-			if(mcn->ticks > 30) {	// TODO Make a macro somewhere
+			if(mcn->ticks > CFG_TIMEOUT) {
 				return Q_TRAN(hsm_listen);
 			} else {
 				mcn->ticks++;
