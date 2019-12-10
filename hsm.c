@@ -5,8 +5,8 @@
 
 static QState hsm_init(hsm *mcn);
 static QState hsm_on(hsm *mcn);
-static QState hsm_listen(hsm *mcn);
-static QState hsm_configure(hsm *mcn);
+static QState hsm_oct_cfg(hsm *mcn);
+static QState hsm_tun_cfg(hsm *mcn);
  
 void hsm_ctor(void)  {
 	QActive_ctor(&(machine.super_), (QStateHandler)& hsm_init);
@@ -39,7 +39,6 @@ QState hsm_on(hsm *mcn) {
 QState hsm_listen(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case Q_ENTRY_SIG:
-			mcn->disp_tmr = INACTIVE_TICKS;
 			return Q_HANDLED();
 		case Q_EXIT_SIG:
 			return Q_HANDLED();
