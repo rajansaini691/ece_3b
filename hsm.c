@@ -44,12 +44,15 @@ QState hsm_listen(hsm *mcn) {
 		case Q_EXIT_SIG:
 			return Q_HANDLED();
 		case LEFT_SIG:
-			return Q_HANDLED();
-			break;
+			return Q_TRAN(hsm_oct_cfg);
 		case RIGHT_SIG:
-			return Q_HANDLED();
-			break;
+			return Q_TRAN(hsm_oct_cfg);
+		case ENC_BTN_SIG:
+			return Q_TRAN(hsm_tun_cfg);
 		case TICK_SIG:
+			// Draw colored word
+
+			// Wait 50 ms (simulate FFT)
 			return Q_HANDLED();
 	}
 	return Q_SUPER(&hsm_on);
@@ -63,10 +66,16 @@ QState hsm_configure(hsm *mcn) {
 			return Q_HANDLED();
 		case TICK_SIG:
 			return Q_HANDLED();
-		case LEFT_SIG:
-			return Q_HANDLED();
-		case RIGHT_SIG:
-			return Q_HANDLED();
 	}
 	return Q_SUPER(&hsm_on);
+}
+
+// Configure tuning frequency
+QState hsm_tun_cfg(hsm *mcn) {
+	return Q_SUPER(hsm_configure);
+}
+
+// Set the octave
+QState hsm_oct_cfg(hsm *mcn) {
+	return Q_SUPER(hsm_configure);
 }
