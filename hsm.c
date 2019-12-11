@@ -14,6 +14,7 @@ void hsm_ctor(void)  {
 	machine.ticks = 0;
 	machine.octave = 4;
 	machine.tuning = 440;
+	machine.color = 0xFFFFFF;
 }
 
 QState hsm_init(hsm *mcn) {
@@ -29,15 +30,19 @@ QState hsm_listen(hsm *mcn) {
 			drw_clr(0, 0, LCD_WIDTH, LCD_HEIGHT);
 			return Q_HANDLED();
 		case Q_EXIT_SIG:
+			clr_txt();
 			return Q_HANDLED();
 		case D_SIG:
 			return Q_TRAN(hsm_oct_cfg);
 		case C_SIG:
 			return Q_TRAN(hsm_tun_cfg);
 		case TICK_SIG:
-			// Draw colored word
-
 			// Wait 50 ms (simulate FFT)
+			mcn->color += 1;
+
+			// Draw colored word (obviously more sensibly than this)
+			setColor(mcn->color >> 16 & 0xFF, ~(mcn->color >> 8 & 0xFF), mcn->color & 0xFF);
+			drw_txt("A");
 			return Q_HANDLED();
 	}
 	return Q_SUPER(&QHsm_top);
@@ -74,7 +79,6 @@ QState hsm_tun_cfg(hsm *mcn) {
 			if(mcn->tuning > 420) {
 				mcn->tuning--;
 				// TODO Draw bar
-
 				xil_printf("%d\n\r", mcn->tuning);
 			}
 			break;

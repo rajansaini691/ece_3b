@@ -24,6 +24,7 @@ typedef struct hsmTag {               //Lab2A State machine
 	uint16_t ticks;
 	uint8_t octave;
 	uint32_t tuning;
+	uint32_t color;
 } hsm;
 
 hsm machine;
