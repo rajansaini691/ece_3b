@@ -14,7 +14,7 @@ void hsm_ctor(void)  {
 	machine.ticks = 0;
 	machine.octave = 4;
 	machine.tuning = 440;
-	machine.color = 0xFFFFFF;
+	machine.color = 0x000000;
 }
 
 QState hsm_init(hsm *mcn) {
@@ -38,7 +38,12 @@ QState hsm_listen(hsm *mcn) {
 			return Q_TRAN(hsm_tun_cfg);
 		case TICK_SIG:
 			// Wait 50 ms (simulate FFT)
+
+			// Determine color (no idea how this will turn out)
 			mcn->color += 1;
+			mcn->color &= 0xFF;
+			mcn->color |= ~(mcn->color & 0xFF) << 8;
+			mcn->color |= (mcn->color & 0xFF) << 16;
 
 			// Draw colored word (obviously more sensibly than this)
 			setColor(mcn->color >> 16 & 0xFF, ~(mcn->color >> 8 & 0xFF), mcn->color & 0xFF);
