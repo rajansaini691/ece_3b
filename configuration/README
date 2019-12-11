@@ -2,3 +2,7 @@
 
 bsp.zip contains Lab3B_bsp/
  - Should be a sibling of Lab3B/ (or whatever the project name is)
+
+wrapper.zip contains system.hdf, system_wrapper_something_something/
+ - Both should be siblings of Lab3B/
+ - Contain bitstream files
