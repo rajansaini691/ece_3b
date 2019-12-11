@@ -1,0 +1,4 @@
+.project, .cproject go in the project root directory (should be siblings of src/)
+
+bsp.zip contains Lab3B_bsp/
+ - Should be a sibling of Lab3B/ (or whatever the project name is)
