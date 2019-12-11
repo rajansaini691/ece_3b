@@ -16,3 +16,10 @@ void drw_txt(char* text);
 #define VOL_Y2 60
 #define VOL_COL 0xEEEEEE
 #define VOL_INC 220/64	// Volume bar increment
+
+// top y-coord of the dot row
+#define NUM_DOTS 10
+#define DOT_Y 3 * LCD_HEIGHT / 4
+#define DOT_HEIGHT LCD_HEIGHT / 20
+#define DOT_SEL_COL 0xFFFFFF
+#define DOT_COL 0x000000	// Unselected color
