@@ -32,9 +32,11 @@ QState hsm_listen(hsm *mcn) {
 		case Q_EXIT_SIG:
 			clr_txt();
 			return Q_HANDLED();
-		case D_SIG:
+		case LEFT_SIG:
 			return Q_TRAN(hsm_oct_cfg);
-		case C_SIG:
+		case RIGHT_SIG:
+			return Q_TRAN(hsm_oct_cfg);
+		case ENC_BTN_SIG:
 			return Q_TRAN(hsm_tun_cfg);
 		case TICK_SIG:
 			// Wait 50 ms (simulate FFT)
