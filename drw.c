@@ -53,8 +53,7 @@ void drw_vol(uint8_t vol) {
 	setColor((VOL_COL >> 16) & 0xFF, (VOL_COL >> 8) & 0xFF, VOL_COL & 0xFF);
 	if(vol > prev_vol) {
 		fillRect(vol2pix(prev_vol), VOL_Y1, vol2pix(vol), VOL_Y2);
-	}
-	else {
+	} else {
 		drw_clr(vol2pix(vol), VOL_Y1, vol2pix(prev_vol), VOL_Y2);
 	}
 	prev_vol = vol;
@@ -94,5 +93,4 @@ void clr_oct_sel() {
 	for(int i = 0; i < NUM_DOTS; i++) {
 		drw_clr(oct2pix(i), DOT_Y, oct2pix(i) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
 	}
-
 }

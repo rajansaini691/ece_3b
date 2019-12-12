@@ -113,9 +113,6 @@ QState hsm_tun_cfg(hsm *mcn) {
 QState hsm_oct_cfg(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case Q_ENTRY_SIG:
-			// TODO Make sure parent's ENTRY still gets called
-			// (parent is hsm_configure)
-
 			// Draws entire octave menu
 			drw_oct_sel();
 			break;
@@ -125,16 +122,12 @@ QState hsm_oct_cfg(hsm *mcn) {
 		case LEFT_SIG:
 			if(mcn->octave > 0) {
 				mcn->octave--;
-
-				// Delete when done debugging
-				xil_printf("%d\n\r", mcn->octave);
 				drw_dot(mcn->octave);
 			}
 			break;
 		case RIGHT_SIG:
 			if(mcn->octave < 9) {
 				mcn->octave++;
-				xil_printf("%d\n\r", mcn->octave);
 				drw_dot(mcn->octave);
 			}
 			break;
