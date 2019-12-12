@@ -61,23 +61,23 @@ void drw_vol(uint8_t vol) {
 }
 
 // x-coord of left side
-#define oct2pix(oct) (octave + 1) * (LCD_WIDTH - DOT_WIDTH * NUM_DOTS) / (NUM_DOTS + 1)
+#define oct2pix(oct) (oct + 1) * (LCD_WIDTH - DOT_HEIGHT * NUM_DOTS) / (NUM_DOTS + 1) + oct*DOT_HEIGHT
 
 // Avoids redundant redrawing
 static uint8_t prev_oct = 0;
 
 // Updates a single dot; assumes octave is 0-indexed
-static void drw_dot(uint8_t oct) {
+void drw_dot(uint8_t oct) {
 	if(oct == prev_oct) return;
 	uint8_t x = oct2pix(oct);
 
 	// Reset last dot
 	setColor((DOT_COL >> 16) & 0xFF, (DOT_COL >> 8) & 0xFF, DOT_COL & 0xFF);
-	fillRect(oct2pix(prev_oct), DOT_Y, oct2pix(prev_oct) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT)
+	fillRect(oct2pix(prev_oct), DOT_Y, oct2pix(prev_oct) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
 
 	// Mark current dot as selected
 	setColor((DOT_SEL_COL >> 16) & 0xFF, (DOT_SEL_COL >> 8) & 0xFF, DOT_SEL_COL & 0xFF);
-	fillRect(oct2pix(oct), DOT_Y, oct2pix(prev_oct) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT)
+	fillRect(oct2pix(oct), DOT_Y, oct2pix(oct) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
 
 	prev_oct = oct;
 }
@@ -86,13 +86,13 @@ static void drw_dot(uint8_t oct) {
 void drw_oct_sel() {
 	setColor((DOT_COL >> 16) & 0xFF, (DOT_COL >> 8) & 0xFF, DOT_COL & 0xFF);
 	for(int i = 0; i < NUM_DOTS; i++) {
-		fillRect(oct2pix(prev_oct), DOT_Y, oct2pix(prev_oct) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
+		fillRect(oct2pix(i), DOT_Y, oct2pix(i) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
 	}
 }
 
 void clr_oct_sel() {
 	for(int i = 0; i < NUM_DOTS; i++) {
-		draw_clr(oct2pix(prev_oct), DOT_Y, oct2pix(prev_oct) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
+		drw_clr(oct2pix(i), DOT_Y, oct2pix(i) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
 	}
 
 }

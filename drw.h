@@ -8,6 +8,8 @@ void clr_vol(uint8_t vol);
 void clr_txt();
 void init_vol(uint8_t vol);
 void drw_txt(char* text);
+void drw_dot(uint8_t oct);
+void drw_oct_sel();
 
 #define VOL_X1 10
 #define VOL_X2 230
