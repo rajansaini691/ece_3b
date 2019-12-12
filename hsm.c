@@ -4,6 +4,7 @@
 #include "hsm.h"
 
 static QState hsm_init(hsm *mcn);
+static QState hsm_on(hsm *mcn);
 static QState hsm_listen(hsm *mcn);
 static QState hsm_oct_cfg(hsm *mcn);
 static QState hsm_tun_cfg(hsm *mcn);
@@ -19,15 +20,23 @@ void hsm_ctor(void)  {
 
 QState hsm_init(hsm *mcn) {
 	xil_printf("Initializing HSM\r\n");
-	return Q_TRAN(&hsm_listen);
+	return Q_TRAN(&hsm_on);
+}
+
+QState hsm_on(hsm *mcn) {
+	switch (Q_SIG(mcn)) {
+		case Q_ENTRY_SIG:
+			drw_clr(0, 0, LCD_WIDTH, LCD_HEIGHT);
+		case Q_INIT_SIG:
+			return Q_TRAN(hsm_listen);
+	}
+
+	return Q_SUPER(&QHsm_top);
 }
 
 QState hsm_listen(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case Q_ENTRY_SIG:
-			// TODO Draw on program entry, not every time we go back
-			// to this state
-			drw_clr(0, 0, LCD_WIDTH, LCD_HEIGHT);
 			return Q_HANDLED();
 		case Q_EXIT_SIG:
 			clr_txt();
@@ -52,7 +61,7 @@ QState hsm_listen(hsm *mcn) {
 			drw_txt("A");
 			return Q_HANDLED();
 	}
-	return Q_SUPER(&QHsm_top);
+	return Q_SUPER(hsm_on);
 }
 
 QState hsm_configure(hsm *mcn) {
@@ -76,7 +85,7 @@ QState hsm_configure(hsm *mcn) {
 			}
 			return Q_HANDLED();
 	}
-	return Q_SUPER(&QHsm_top);
+	return Q_SUPER(hsm_on);
 }
 
 // Configure tuning frequency
