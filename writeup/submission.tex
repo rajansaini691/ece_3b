@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{newcent}
 \usepackage{amsmath}
+\usepackage{wasysym}
 \title{\textsc{Chromatic Tuner}}
 \author{\textit{Rajan Saini \& Varun Iyer}}
 \date{\textit{\today}}
@@ -20,18 +21,50 @@ Our goal for this lab was to create a chromatic tuner which could measure the fr
 	In addition to these requirements, we strive to make our project good looking and easy to use, with the least barriers to operating the interface.
 \section{Methodology}
 \subsection{FFT Evaluation}
-To evaluate our FFT, we used an online tone generator to play a static sine wave. We then printed frequency data so that we could compare our model's predictions with a known ground truth value and reduce the number of possible errors. The pure tone allowed us to test accuracy at different frequency levels and volumes without worrying about higher harmonics affecting our output. This way, we could better understand the direction in which to improve on our FFT, making our development more efficient. 
-Initially, we saw that our predicted value oscillated around the target frequency, so we averaged over a history of eight sample buffers to improve the results' consistency. Then, when we saw that the FFT grew less accurate at lower frequencies, we maintained a longer history of time-domain data at lower octaves to improve bin resolution. (TODO - mention the precise number of bins, buffer size, num buffers maintained, resulting frequency spacing). Maintaining a history allowed us to improve responsiveness due to the lower audio buffer size without sacrificing accuracy. 
+To evaluate our FFT, we used an online tone generator to play a static sine wave. We then printed frequency data so that we could compare our model's predictions with a known ground truth value and reduce the number of possible errors. The pure tone allowed us to test accuracy at different frequency levels and volumes without worrying about higher harmonics affecting our output. This way, we could better understand the direction in which to improve on our FFT, making our development more efficient. \par
+\subsection{FFT Speed Optimization}
+	We found that the slowest part of our FFT was the calculation of twiddle consants.
+We identified that these constants range from $\tfrac{1}{N\div 2}$ to $\tfrac{N\div 2 - 1}{N\div 2}$.
+In order to minimize the computation time of the FFT, we precaculated all possible values of these constants and placed them in a look-up table, bringing our total FFT computation time to less than 30ms for a 512-sample FFT. \par
+\subsection{FFT Accuracy Optimization}
+We found that the values of the standard 256-point FFT varied by more than 100 Hz.
+We decreased our bin spacing by taking 4096 samples from the microphone and averaging eight points at a time.
+Because this put high frequency pitches in the 7th octave and above outside the Nyquist limit of the FFT, we used 2-sample averaging or less for these higher octaves.
+\par
+While this put us in the right direction, our values still varied substantially.
+We applied two more corrections: first, we used an exponential decay model to incorporate the results of previous computations into our estimated frequency.
+This model predicts that 
+\begin{align}
+	f(t) = \alpha F_\text{max}(t) + (\alpha - 1) f(t - 1)
+\end{align}
+The weight given to observations is given a natural exponential decrease of $\alpha e^{-(\alpha - 1) t}$ and we are not required to store the results of previous computations in a buffer, making this algorithm a good choice to filter high-frequency variations in the estimated frequency. \par
+The final modification we made was in the interpolation algorithm which determines the peak of the FFT within individual bins.
+We used the Quinn estimator\footnote{Quinn, BG. "Estimating frequency by interpolation using Fourier coefficients," IEEE Trans. Sig. Proc. Vol 42 No 5, May 1994, pp1264-1268.} instead of the default parabolic estimator for this purpose. 
+We found the Quinn estimator to be more true to our test examples generated using a tone synthesizer.
 \subsection{UI Development}
 We used the QP Nano libraries to ensure a reliable GUI, with modal behavior encapsulated in an HFSM. All states inherit from the base ON state, which performs all of the necessary initializations on entry. It has two child states: listening and configuring. The FFTs are computed while in the "listening" mode, while modifications to the base tuning note and desired octave happen in "configuration". The configuration is also responsible for timing transitions back to the "listening" state after a sufficient period of inactivity. Its two child states, tuning and octave change, handle the rendering and updating of state.  
 
 The rotary encoder is the sole source of user input. It initiates transitions to the configuration states and updates their values. If it is turned while being pressed, we transition to the state updating the octave, while if it is turned without being pressed, we update the tuning. Because pressing makes quick rotation more difficult, assigning it to control a variable with only 10 possible values gives the user more control. Likewise, allowing rotation without pressing lets the user reach the more distant versions of A more quickly.  
-
+\subsection{Aesthetic Design}
+We chose to maintain a simpler design for ease of prototyping and programming.
+The note and the frequency are displayed in the center of the screen, with an error bar above displaying note error in cents.
+We chose to keep the shapes simple rectangles but spent more time choosing foreground, background, and highlight colors to ensure that our design was pleasing to the eye.
+Our colorschemes were inspired by Ethan Schoonover’s Solarized themes, featuring a blued background with grey text and magenta highlights.
 \subsection{Other Optimizations}
 We also split up the boilerplate code responsible for determining the note and the performer's tuning error, in cents. We found that the provided code that calculated the tuning error was not accurate enough, so we directly computed the note value instead along a logarithmic scale using the following formula:
 \begin{align}
-(12*(\log (f) - \log(440))+57.5) % 12$$
+n = (12*(\log_2 (f) - \log_2(440))+57.5) \text{ mod } 12
 \end{align}
-
+We calculated the cents value between the notes by using the formula:
+\begin{align}
+ \cent &= 1200 \log_2\left(\frac{f_\text{actual}}{f_\text{note}}\right)\\
+		&= 1200 \left(\log_2 (f_\text{actual}) - \left(\log_2 A + \frac{n - 9}{12} - k + 4\right) \right)
+\end{align}
+where $A$ is the frequency of $A_4$, normally 440 Hz.
 \section{Results} 
+	We found that our FFT performed very well across a broad range of frequencies, from ~50 Hz to ~11,000 Hz.
+	One thing we struggled with was octave selection; an automatic octave selector would have sped the process substantially. \par
+	We also felt that the size of the display font was too small.
+	We chose not to prioritize this during our production phase because it was very high effort (big fonts fill BRAM) and relatively low reward, as opposed to other easier and more valuable projects.
+	If we had additional time to complete the project, we would first implement an octave selector followed by a larger display font.
 \end{document}
