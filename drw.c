@@ -119,17 +119,17 @@ void drw_bar() {
 }
 
 
-#define cents2pix((cents + 100) * LCD_WIDTH / BAR_RANGE + (LCD_WIDTH - BAR_RANGE) / 2
+#define cents2pix(cents) ((cents + 100) * LCD_WIDTH / BAR_RANGE + (LCD_WIDTH - BAR_RANGE) / 2)
 int16_t prev_cents = 0;
 void drw_dial(int16_t cents) {
-	clr_pix(cents2pix(prev_cents), BAR_Y - DIAL_HEIGHT / 2, cents2pix(prev_cents) + DIAL_HEIGHT, BAR_Y + DIAL_HEIGHT / 2);
+	drw_clr(cents2pix(prev_cents), BAR_Y - DIAL_HEIGHT / 2, cents2pix(prev_cents) + DIAL_HEIGHT, BAR_Y + DIAL_HEIGHT / 2);
 	setColor((BAR_COL >> 16) & 0xFF, (BAR_COL >> 8) & 0xFF, BAR_COL & 0xFF);
 	fillRect(cents2pix(prev_cents), BAR_Y, cents2pix(prev_cents) + DIAL_HEIGHT, BAR_Y + 3);
 	fillRect(cents2pix(cents), BAR_Y - DIAL_HEIGHT / 2, cents2pix(cents) + DIAL_HEIGHT, BAR_Y + DIAL_HEIGHT / 2);
 }
 
 void clr_bar() {
-	clr_pix(BAR_X1, BAR_Y, BAR_X2, BAR_Y + 3);
+	drw_clr(BAR_X1, BAR_Y, BAR_X2, BAR_Y + 3);
 }
 
 void drw_decoration() {
