@@ -9,7 +9,7 @@ void clr_txt();
 void init_tun(uint32_t tun);
 void drw_txt(char* text);
 void drw_dot(uint8_t oct);
-void drw_oct_sel();
+void drw_oct_sel(uint8_t oct);
 
 // top y-coord of the dot row
 #define NUM_DOTS 10

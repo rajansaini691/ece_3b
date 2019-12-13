@@ -53,7 +53,6 @@ void init_tun(uint32_t tun) {
 }
 
 void drw_tun(uint32_t tun) {
-	if(tun == prev_tun) return;
 	setColor((TUN_COL >> 16) & 0xFF, (TUN_COL >> 8) & 0xFF, TUN_COL & 0xFF);
 	fillRect(tun2pix(prev_tun), TUN_Y1, tun2pix(prev_tun) + TUN_WIDTH, TUN_Y2);
 
@@ -71,7 +70,6 @@ static uint8_t prev_oct = 0;
 
 // Updates a single dot; assumes octave is 0-indexed
 void drw_dot(uint8_t oct) {
-	if(oct == prev_oct) return;
 	uint8_t x = oct2pix(oct);
 
 	// Reset last dot
@@ -86,11 +84,12 @@ void drw_dot(uint8_t oct) {
 }
 
 // Draws the entire octave-select menu (a row of 10 dots)
-void drw_oct_sel() {
+void drw_oct_sel(uint8_t oct) {
 	setColor((DOT_COL >> 16) & 0xFF, (DOT_COL >> 8) & 0xFF, DOT_COL & 0xFF);
 	for(int i = 0; i < NUM_DOTS; i++) {
 		fillRect(oct2pix(i), DOT_Y, oct2pix(i) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
 	}
+	drw_dot(oct);
 }
 
 void clr_oct_sel() {

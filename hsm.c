@@ -132,7 +132,7 @@ QState hsm_oct_cfg(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case Q_ENTRY_SIG:
 			// Draws entire octave menu
-			drw_oct_sel();
+			drw_oct_sel(mcn->octave);
 			break;
 		case Q_EXIT_SIG:
 			clr_oct_sel();
