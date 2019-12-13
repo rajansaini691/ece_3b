@@ -129,3 +129,8 @@ void drw_dial(int16_t cents) {
 void clr_bar() {
 	clr_pix(BAR_X1, BAR_Y, BAR_X2, BAR_Y + 3);
 }
+
+void drw_decoration() {
+	setColor(0xFF, 0xFF, 0xFF);
+	fillRect(LCD_WIDTH / 6, LCD_HEIGHT / 5, 5 * LCD_WIDTH / 6, LCD_HEIGHT / 5 + 10);
+}

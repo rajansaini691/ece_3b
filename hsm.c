@@ -30,6 +30,7 @@ QState hsm_on(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case Q_ENTRY_SIG:
 			drw_clr(0, 0, LCD_WIDTH, LCD_HEIGHT);
+			drw_decoration();
 		case Q_INIT_SIG:
 			return Q_TRAN(hsm_listen);
 	}
