@@ -3,6 +3,7 @@
 void hsm_ctor(void);
 // 2 seconds  * ticks per second
 #define CFG_TIMEOUT 2
+#include "fft/note.c"
 
 
 enum hsm_sig {
@@ -27,6 +28,7 @@ typedef struct hsmTag {               //Lab2A State machine
 	uint8_t octave;
 	uint32_t tuning;
 	uint32_t color;
+	note_data n_data;
 } hsm;
 
 hsm machine;

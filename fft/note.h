@@ -25,7 +25,7 @@ void findNote(float f);
 
 typedef struct note_data {
 	int cents;
-	char note;
+	char* note;
 	int oct;
 } note_data;
 
