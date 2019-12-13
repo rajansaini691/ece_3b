@@ -5,6 +5,7 @@
 #include "lib/lcd.h"
 #include "fft/fft.h"
 #include "fft/freq.h"
+#include "fft/note.h"
 
 static QState hsm_init(hsm *mcn);
 static QState hsm_on(hsm *mcn);
@@ -19,6 +20,8 @@ void hsm_ctor(void)  {
 	machine.octave = 4;
 	machine.tuning = 440;
 	machine.color = 0x000000;
+	machine.note = 0;
+	machine.cents = 0;
 }
 
 QState hsm_init(hsm *mcn) {
@@ -60,9 +63,13 @@ QState hsm_listen(hsm *mcn) {
 				// do stuff with fft
 				xil_printf("FFT reading: %d\n\r", (int) reading);
 				sample_start();
+				int f = findCents(reading);
+				xil_printf("%d\n\r", f);
+				int note = findNote(reading);	
+				drw_txt(notes[note]);
+				xil_printf(notes[note]);
 			}
 			QActive_post((QActive*) mcn, FFT_SIG);
-			drw_txt("A");
 			return Q_HANDLED();
 		}
 		case TICK_SIG: {
