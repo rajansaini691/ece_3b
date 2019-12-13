@@ -26,7 +26,7 @@ int findOctave(float f) {
 }
 
 int findCents(float f) {
-	float c=261.63;
+	float c=131;
 	float r;
 	int note=0;
 
@@ -42,12 +42,14 @@ int findCents(float f) {
 
 	//determine which note frequency is closest to
 	if((f-c) <= (r-f)) { //closer to left note
-		return (int) (f - c + 0.5) / 100;
+		//return (int) ((f - c + 0.5) / 100);
+		return (int) (100 * (f - c) / (r - c));
 	}
 	else { //f closer to right note
 		note++;
 		if(note >=12) note=0;
-		return (int) (r - f + 0.5) / 100;
+		//return (int) ((r - f + 0.5) / 100);
+		return (int) (100 * (r - f) / (r - c));
 	}
 }
 
