@@ -52,6 +52,7 @@ uint8_t sample_get(float* q, uint16_t samples, uint8_t decimation) {
 			sum += sample_read(d);
 		}
 		q[qi] = 3.3 * sum / (67108864.0 * decimation);
+		qi++;
 	}
 	return 0x00;
 }

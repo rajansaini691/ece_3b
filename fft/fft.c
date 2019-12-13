@@ -97,7 +97,8 @@ float fft(float* q, float* w, int n, int m, float sample_f, float low, float hig
 	x0=x0/BIN-1;
 
 	if(x0 <0 || x0 > 2) { //error
-		return 0;
+		xil_printf("Quadratic fit error!\r\n");
+		return -1;
 	}
 	if(x0 <= 1)  {
 		frequency=frequency-(1-x0)*BIN;

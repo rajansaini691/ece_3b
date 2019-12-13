@@ -5,7 +5,7 @@
 #define TAYLOR 0 // Degree of taylor expansion to use; 0, 1, or 2
 #define LUT_SIZE 128
 
-const float lut[LUT_SIZE] = {
+const float lut[LUT_SIZE+1] = {
 	0.        , 0.01227154, 0.02454123, 0.03680722, 0.04906767,
 	0.06132074, 0.07356456, 0.08579731, 0.09801714, 0.11022221,
 	0.12241068, 0.13458071, 0.14673047, 0.15885814, 0.17096189,
@@ -31,10 +31,10 @@ const float lut[LUT_SIZE] = {
 	0.97570213, 0.97831737, 0.98078528, 0.98310549, 0.98527764,
 	0.98730142, 0.98917651, 0.99090264, 0.99247953, 0.99390697,
 	0.99518473, 0.99631261, 0.99729046, 0.99811811, 0.99879546,
-	0.99932238, 0.99969882, 0.9999247
+	0.99932238, 0.99969882, 0.9999247 , 1.00000000
 };
 
-struct cnum twiddle(float real, float im, uint16_t k, uint16_t b) {
+struct cnum twiddle(float real, float im, unsigned int k, unsigned int b) {
 	// The computation we have to do is:
 	// real = mult_real(real, im, cosine(-PI*k/b), sine(-PI*k/b))
 	// imagine = mult_im(real, im, cosine(-PI*k/b), sine(-PI*k/b))
@@ -46,6 +46,9 @@ struct cnum twiddle(float real, float im, uint16_t k, uint16_t b) {
 	if(k > LUT_SIZE) {
 		k = (2*LUT_SIZE) - k;
 		cos = -1 * lut[LUT_SIZE - k];
+	}
+	else {
+		cos = lut[LUT_SIZE - k];
 	}
 	sin = lut[k];
 

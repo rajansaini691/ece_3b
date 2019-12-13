@@ -28,7 +28,7 @@ static XGpio btn;
 	} while(0)
 
 void tmr_handler(void *CallBackRef, u8 TmrCtrNumber) {
-	QActive_postISR((QActive *) &machine, TICK_SIG);
+	//QActive_postISR((QActive *) &machine, TICK_SIG);
 	XTmrCtr_WriteReg(ctr.BaseAddress, 0, XTC_TCSR_OFFSET, XTmrCtr_ReadReg(ctr.BaseAddress, 0, XTC_TCSR_OFFSET | XTC_CSR_INT_OCCURED_MASK));
 }
 

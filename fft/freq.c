@@ -25,5 +25,7 @@ float w[512];
 float freq_get() {
 	if(sample_get(q, 512, 1)) return 0.00;
 	for(int i = 0; i < 512; i++) w[i] = 0;
-	return fft(q, w, 512, 12, 48828.125, oct_low[o] * a_freq, oct_high[o] * a_freq);
+	// return fft(q, w, 512, 9, 48828.125, oct_low[octave] * a_freq, oct_high[octave] * a_freq);
+	return fft(q, w, 512, 9, 48828.125, 100, 1000);
+
 }
