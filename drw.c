@@ -11,9 +11,29 @@
        __typeof__ (b) _b = (b); \
      _a < _b ? _a : _b; })
 
-void drw_txt(char* text) {
+#define NOTEY ((LCD_HEIGHT/2) - 2 * BigFont[1])
+#define NOTEX ((LCD_WIDTH/2))
+void drw_note(char* note, uint16_t hz, int cents) {
 	setFont(BigFont);
-	lcdPrint(text, LCD_WIDTH / 2 - 8, LCD_HEIGHT / 2 - 8);
+	setColor(0xFF, 0xFF, 0xFF);
+	setColorBg(0x00, 0x00, 0x00);
+	lcdPrint(note, NOTEX, NOTEY);
+	char hzc[9] = "12345 Hz";
+	char centc[6] = " 12 c";
+	int mod = 1;
+	for(int i = 4; i >= 0; i--) {
+		hzc[i] = ((hz % (10 * mod)) / mod) + '0';
+		mod *= 10;
+	}
+	if(cents < 0) {
+		centc[0] = '-';
+		cents = -cents;
+	}
+	centc[1] = ((cents % 100)/10) + '0';
+	centc[2] = (cents % 10) + '0';
+	xil_printf("CENTC %c", centc[0]);
+	lcdPrint(hzc, NOTEX - 8 * BigFont[0], NOTEY + 2 * BigFont[1]);
+	lcdPrint(centc, NOTEX + BigFont[0], NOTEY + 2 * BigFont[1]);
 }
 
 void clr_txt(void) {
