@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{newcent}
+\usepackage{amsmath}
 \title{\textsc{Chromatic Tuner}}
 \author{\textit{Rajan Saini \& Varun Iyer}}
 \date{\textit{\today}}
@@ -8,12 +9,29 @@
 \section{Design Specification}
 Our goal for this lab was to create a chromatic tuner which could measure the frequency and note deviation of a pitch being played near the FPGA’s on-board microphone. The design of the tuner had to meet several criteria.
 \begin{enumerate}
-	\item Accurate measurement of the pitch to within $10$ Hz.
-	\item Large, easy-to-read display of the note being played.
-	\item Displaying the deviation from the target note in cents.
+	\item Accurate measurement of the pitch to within $10$ Hz
+	\item Display the note and frequency being played
+	\item Display the deviation from the target note in geometric cents
+	\item Provide an interface for changing the value of $A_4$ from the default of 440 Hz
+	\item Provide an interface to select the octave of the note being played
+	\item Display the deviation visually to make tuning adjustments easy to make
 \end{enumerate}
+	We chose (6) as our additional feature because we believed that it would be the most helpful tool for a musician using our application.
+	In addition to these requirements, we strive to make our project good looking and easy to use, with the least barriers to operating the interface.
 \section{Methodology}
 \subsection{FFT Evaluation}
-To evaluate our FFT, we used an online tone generator to play a static sine wave. We then printed frequency data so that we could compare our model's predictions with a known ground truth value and reduce the number of possible errors. The pure tone allowed us to test accuracy at different frequency levels and volumes without worrying about higher harmonics affecting our output. This way, we could better understand the direction in which to improve on our FFT, making our development more efficient. Determining the FFT's frequency 
+To evaluate our FFT, we used an online tone generator to play a static sine wave. We then printed frequency data so that we could compare our model's predictions with a known ground truth value and reduce the number of possible errors. The pure tone allowed us to test accuracy at different frequency levels and volumes without worrying about higher harmonics affecting our output. This way, we could better understand the direction in which to improve on our FFT, making our development more efficient. 
+Initially, we saw that our predicted value oscillated around the target frequency, so we averaged over a history of eight sample buffers to improve the results' consistency. Then, when we saw that the FFT grew less accurate at lower frequencies, we maintained a longer history of time-domain data at lower octaves to improve bin resolution. (TODO - mention the precise number of bins, buffer size, num buffers maintained, resulting frequency spacing). Maintaining a history allowed us to improve responsiveness due to the lower audio buffer size without sacrificing accuracy. 
 \subsection{UI Development}
-We used the QP Nano libraries to ensure a reliable GUI, with modal behavior encapsulated in an HFSM. All states inherit from the base ON state, which performs all of the necessary initializations on entry. It has two child states: listening and configuring. The FFTs are computed while in the "listening" mode, while modifications to the base tuning note and desired octave happen in "configuration". The configuration is also responsible for timing transitions back to the "listening" state after a sufficient period of inactivity. Its two child states, tuning and octave change, handle the rendering and updating of state.  The rotary encoder is the sole source of user input. It initiates transitions to the configuration states and updates their values. If it is turned while being pressed, we transition to the state updating the octave, while if it is turned without being pressed, we update the tuning. Because pressing makes quick rotation more difficult, assigning it to control a variable with only 10 possible values gives the user more control. Likewise, allowing rotation without pressing lets the user reach the more distant versions of A more quickly.  \section{Results} \end{document}
+We used the QP Nano libraries to ensure a reliable GUI, with modal behavior encapsulated in an HFSM. All states inherit from the base ON state, which performs all of the necessary initializations on entry. It has two child states: listening and configuring. The FFTs are computed while in the "listening" mode, while modifications to the base tuning note and desired octave happen in "configuration". The configuration is also responsible for timing transitions back to the "listening" state after a sufficient period of inactivity. Its two child states, tuning and octave change, handle the rendering and updating of state.  
+
+The rotary encoder is the sole source of user input. It initiates transitions to the configuration states and updates their values. If it is turned while being pressed, we transition to the state updating the octave, while if it is turned without being pressed, we update the tuning. Because pressing makes quick rotation more difficult, assigning it to control a variable with only 10 possible values gives the user more control. Likewise, allowing rotation without pressing lets the user reach the more distant versions of A more quickly.  
+
+\subsection{Other Optimizations}
+We also split up the boilerplate code responsible for determining the note and the performer's tuning error, in cents. We found that the provided code that calculated the tuning error was not accurate enough, so we directly computed the note value instead along a logarithmic scale using the following formula:
+\begin{align}
+(12*(\log (f) - \log(440))+57.5) % 12$$
+\end{align}
+
+\section{Results} 
+\end{document}
