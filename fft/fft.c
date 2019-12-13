@@ -3,8 +3,9 @@
 
 static float new_[512];
 static float new_im[512];
-#define BIN 95.367431640625
 
+static float previous = 0;
+#define INERTIA 0.75
 // n - 512 (buffer size)
 float fft(float* q, float* w, int n, int m, float sample_f, float low, float high) {
 	int a,b,r,d,e,c;
@@ -73,11 +74,12 @@ float fft(float* q, float* w, int n, int m, float sample_f, float low, float hig
 		k=0;		
 	}
 
+	float bin = sample_f / n;
 	//find magnitudes
 	max=0;
 	place=1;
-	int low_bin = (int) ((low + .5)/ BIN);
-	int high_bin = (int) ((high + .5)/ BIN);
+	int low_bin = (int) ((low + .5)/ bin);
+	int high_bin = (int) ((high + .5)/ bin);
 	for(i=low_bin; i<high_bin && i<(n/2); i++) {
 		new_[i]=q[i]*q[i]+w[i]*w[i];
 		if(max < new_[i]) {
@@ -87,25 +89,30 @@ float fft(float* q, float* w, int n, int m, float sample_f, float low, float hig
 	}
 	
 
-	frequency = BIN*place;
+	frequency = bin*place;
 
 	//curve fitting for more accuarcy
 	//assumes parabolic shape and uses three point to find the shift in the parabola
 	//using the equation y=A(x-x0)^2+C
 	float y1=new_[place-1],y2=new_[place],y3=new_[place+1];
-	float x0=BIN+(2*BIN*(y2-y1))/(2*y2-y1-y3);
-	x0=x0/BIN-1;
+	float x0=bin+(2*bin*(y2-y1))/(2*y2-y1-y3);
+	x0=x0/bin-1;
 
 	if(x0 <0 || x0 > 2) { //error
 		xil_printf("Quadratic fit error!\r\n");
 		return -1;
 	}
 	if(x0 <= 1)  {
-		frequency=frequency-(1-x0)*BIN;
+		frequency=frequency-(1-x0)*bin;
 	}
 	else {
-		frequency=frequency+(x0-1)*BIN;
+		frequency=frequency+(x0-1)*bin;
 	}
 	
-	return frequency;
+	if(previous == 0) {
+		previous = frequency;
+	}
+
+	previous = (INERTIA * previous) + (1-INERTIA) * frequency;
+	return previous;
 }

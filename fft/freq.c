@@ -1,6 +1,7 @@
 #include "sample.h"
 #include "fft.h"
 
+#define SAMPLE_FREQ 48828.125
 
 float oct_low[10] = {0.03716272,  0.07432544,  0.14865089,  0.29730178,  0.59460356,
 	                 1.18920712,  2.37841423,  4.75682846,  9.51365692, 19.02731384};
@@ -19,13 +20,15 @@ void set_a(uint16_t a)
 	a_freq = a;
 }
 
-
-float q[512];
-float w[512];
+#define N_ 512
+#define M_ 9
+float q[N_];
+float w[N_];
 float freq_get() {
-	if(sample_get(q, 512, 1)) return 0.00;
-	for(int i = 0; i < 512; i++) w[i] = 0;
-	// return fft(q, w, 512, 9, 48828.125, oct_low[octave] * a_freq, oct_high[octave] * a_freq);
-	return fft(q, w, 512, 9, 48828.125, 100, 1000);
-
+	int decimation = (int) (SAMPLE_FREQ / (2 * oct_high[octave] * a_freq));
+	if(decimation > 8) decimation = 8;
+	if(octave < 4) decimation = 2;
+	if(sample_get(q, N_ * decimation, decimation)) return 0.00;
+	for(int i = 0; i < N_; i++) w[i] = 0;
+	return fft(q, w, N_, M_, SAMPLE_FREQ /decimation, oct_low[octave] * a_freq, oct_high[octave] * a_freq);
 }
