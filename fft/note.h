@@ -8,7 +8,7 @@ through the note frequencies, given the relation that the next higher or lower n
 An array containing the names of the notes is used instead of a switch statement. It saves code space and time by using a look up table instead of a case statement.
 
 This function can possibly be improved by using an equation to model the relation between the notes 
-instead of iterating through each note. This requires a log function.
+	instead of iterating through each note. This requires a log function.
 
 Input
 	f - the frequency
@@ -22,5 +22,11 @@ Returns
 #define root2 1.0594631 //twelfth root of 2
 
 void findNote(float f);
+
+typedef struct note_data {
+	int cents;
+	char note;
+	int oct;
+} note_data;
 
 #endif
