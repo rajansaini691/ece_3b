@@ -25,9 +25,7 @@ void set_a(uint16_t a)
 float q[N_];
 float w[N_];
 float freq_get() {
-	int decimation = (int) (SAMPLE_FREQ / (2 * oct_high[octave] * a_freq));
-	if(decimation > 8) decimation = 8;
-	if(octave < 4) decimation = 2;
+	int decimation = 8;
 	if(sample_get(q, N_ * decimation, decimation)) return 0.00;
 	for(int i = 0; i < N_; i++) w[i] = 0;
 	return fft(q, w, N_, M_, SAMPLE_FREQ /decimation, oct_low[octave] * a_freq, oct_high[octave] * a_freq);
