@@ -58,6 +58,19 @@ void drw_tun(uint32_t tun) {
 
 	setColor((TUN_SEL_COL >> 16) & 0xFF, (TUN_SEL_COL >> 8) & 0xFF, TUN_SEL_COL & 0xFF);
 	fillRect(tun2pix(tun), TUN_Y1, tun2pix(tun) + TUN_WIDTH, TUN_Y2);
+
+	setFont(BigFont);
+	// x_size: BigFont[0]
+	// y_size: BigFont[1]
+	char ntext[4];
+	ntext[0] = ((tun % (1000)) / 100) + '0';
+	ntext[1] = ((tun % (100)) / 10) + '0';
+	ntext[2] = ((tun % (10))) + '0';
+	ntext[3] = '\0';
+	setColorBg((TUN_COL >> 16) & 0xFF, (TUN_COL >> 8) & 0xFF, TUN_COL & 0xFF);
+	setColor(0x7F, 0x7F, 0x7F);
+	lcdPrint(ntext, 120 - BigFont[0] - BigFont[0]/2, TUN_Y2 - (TUN_HEIGHT -BigFont[1])/2 - BigFont[1]);
+
 	//xil_printf("%d\n\r", tun2pix(tun));
 	prev_tun = tun;
 }
