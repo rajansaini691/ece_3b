@@ -10,6 +10,9 @@ void init_tun(uint32_t tun);
 void drw_txt(char* text);
 void drw_dot(uint8_t oct);
 void drw_oct_sel(uint8_t oct);
+void drw_decoration();
+void drw_dial(int16_t cents);
+void drw_bar();
 
 // top y-coord of the dot row
 #define NUM_DOTS 10
