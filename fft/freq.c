@@ -26,6 +26,12 @@ float q[N_];
 float w[N_];
 float freq_get() {
 	int decimation = 8;
+	if(octave > 7) {
+		decimation = 2;
+	}
+	if(octave > 9) {
+		decimation = 1;
+	}
 	if(sample_get(q, N_ * decimation, decimation)) return 0.00;
 	for(int i = 0; i < N_; i++) w[i] = 0;
 	return fft(q, w, N_, M_, SAMPLE_FREQ /decimation, oct_low[octave] * a_freq, oct_high[octave] * a_freq);
