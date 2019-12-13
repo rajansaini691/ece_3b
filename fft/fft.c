@@ -90,24 +90,19 @@ float fft(float* q, float* w, int n, int m, float sample_f, float low, float hig
 	
 
 	frequency = bin*place;
+	if(place > 510 || place < 1) {
+		xil_printf("At bounds of octave.");
+		return frequency;
+	}
 
-	//curve fitting for more accuarcy
-	//assumes parabolic shape and uses three point to find the shift in the parabola
-	//using the equation y=A(x-x0)^2+C
-	float y1=new_[place-1],y2=new_[place],y3=new_[place+1];
-	float x0=bin+(2*bin*(y2-y1))/(2*y2-y1-y3);
-	x0=x0/bin-1;
-
-	if(x0 <0 || x0 > 2) { //error
-		xil_printf("Quadratic fit error!\r\n");
-		return -1;
-	}
-	if(x0 <= 1)  {
-		frequency=frequency-(1-x0)*bin;
-	}
-	else {
-		frequency=frequency+(x0-1)*bin;
-	}
+	float ap = (q[place + 1] * q[place] +  w[place + 1] * w[place])  /  (new_[place]);
+	float am = (q[place - 1] * q[place] +  w[place - 1] * w[place])  /  (new_[place]);
+	float dp = -ap / (1.0 - ap);
+	float dm = am / (1.0 - am);
+	float db;
+	if(dp > 0 && dm > 0) d = dp;
+	else db = dm;
+	frequency += db * bin;
 	
 	if(previous == 0) {
 		previous = frequency;
