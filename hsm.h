@@ -8,13 +8,14 @@ void hsm_ctor(void);
 enum hsm_sig {
 	LEFT_SIG = Q_USER_SIG,
 	RIGHT_SIG,
-	TICK_SIG,
-	ENC_BTN_SIG,
+	LEFT_BTN_SIG,
+	RIGHT_BTN_SIG,
 	A_SIG,
 	B_SIG,
 	C_SIG,
 	D_SIG,
-	E_SIG
+	E_SIG,
+	TICK_SIG
 };
 
 typedef struct hsmTag {               //Lab2A State machine

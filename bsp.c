@@ -41,15 +41,27 @@ uint8_t curstate = REST;
 void enc_handler(void *baseaddr_p) {
 	volatile Xuint32 dsr = XGpio_DiscreteRead(&enc, 1);
 
-	if(!(dsr & 0x04)) { // For some reason active low
-		QActive_postISR((QActive *) &machine, ENC_BTN_SIG);
-	}
-
 	switch(dsr & 0b11) {
 		case 0b11:
-			if(curstate == CW_T2) QActive_postISR((QActive *) &machine, LEFT_SIG);
-			if(curstate == CCW_T2) QActive_postISR((QActive *) &machine, RIGHT_SIG);
+			if(curstate == CW_T2) {
+				if(dsr & 0x04) { 
+					QActive_postISR((QActive *) &machine, LEFT_SIG);
+				} else {
+					// Active low
+					QActive_postISR((QActive *) &machine, LEFT_BTN_SIG);
+				}
+			}
+
+			if(curstate == CCW_T2) {
+				if(dsr & 0x04) { 
+					QActive_postISR((QActive *) &machine, RIGHT_SIG);
+				} else {
+					// Active low
+					QActive_postISR((QActive *) &machine, RIGHT_BTN_SIG);
+				}
+			}
 			curstate = REST;
+
 			break;
 		case 0b01:
 			curstate = (curstate == REST) ? CCW_T1 : curstate;

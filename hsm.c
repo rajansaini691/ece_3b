@@ -42,12 +42,6 @@ QState hsm_listen(hsm *mcn) {
 		case Q_EXIT_SIG:
 			clr_txt();
 			return Q_HANDLED();
-		case LEFT_SIG:
-			return Q_TRAN(hsm_oct_cfg);
-		case RIGHT_SIG:
-			return Q_TRAN(hsm_oct_cfg);
-		case ENC_BTN_SIG:
-			return Q_TRAN(hsm_tun_cfg);
 		case TICK_SIG:
 			// Wait 50 ms (simulate FFT)
 
@@ -61,6 +55,15 @@ QState hsm_listen(hsm *mcn) {
 			setColor(mcn->color >> 16 & 0xFF, ~(mcn->color >> 8 & 0xFF), mcn->color & 0xFF);
 			drw_txt("A");
 			return Q_HANDLED();
+		case LEFT_SIG:
+			return Q_TRAN(hsm_tun_cfg);
+		case RIGHT_SIG:
+			return Q_TRAN(hsm_tun_cfg);
+		case LEFT_BTN_SIG:
+			return Q_TRAN(hsm_oct_cfg);
+		case RIGHT_BTN_SIG:
+			return Q_TRAN(hsm_oct_cfg);
+
 	}
 	return Q_SUPER(hsm_on);
 }
@@ -76,6 +79,14 @@ QState hsm_configure(hsm *mcn) {
 			mcn->ticks = 0;
 			return Q_HANDLED();
 		case RIGHT_SIG:
+			xil_printf("reset\n\r");
+			mcn->ticks = 0;
+			return Q_HANDLED();
+		case LEFT_BTN_SIG:
+			xil_printf("reset\n\r");
+			mcn->ticks = 0;
+			return Q_HANDLED();
+		case RIGHT_BTN_SIG:
 			mcn->ticks = 0;
 			return Q_HANDLED();
 		case TICK_SIG:
@@ -113,7 +124,7 @@ QState hsm_tun_cfg(hsm *mcn) {
 			}
 			break;
 	}
-	return Q_SUPER(hsm_configure);
+	return Q_SUPER(&hsm_configure);
 }
 
 // Set the octave
@@ -126,13 +137,13 @@ QState hsm_oct_cfg(hsm *mcn) {
 		case Q_EXIT_SIG:
 			clr_oct_sel();
 			break;
-		case LEFT_SIG:
+		case LEFT_BTN_SIG:
 			if(mcn->octave > 0) {
 				mcn->octave--;
 				drw_dot(mcn->octave);
 			}
 			break;
-		case RIGHT_SIG:
+		case RIGHT_BTN_SIG:
 			if(mcn->octave < 9) {
 				mcn->octave++;
 				drw_dot(mcn->octave);
