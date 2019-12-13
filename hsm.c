@@ -2,6 +2,7 @@
 #include "drw.h"
 #include "bsp.h"
 #include "hsm.h"
+#include "lib/lcd.h"
 
 static QState hsm_init(hsm *mcn);
 static QState hsm_on(hsm *mcn);
@@ -91,17 +92,23 @@ QState hsm_configure(hsm *mcn) {
 // Configure tuning frequency
 QState hsm_tun_cfg(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
+		case Q_ENTRY_SIG:
+			init_tun(mcn->tuning);
+			break;
+		case Q_EXIT_SIG:
+			clr_tun();
+			break;
 		case LEFT_SIG:
 			if(mcn->tuning > 420) {
 				mcn->tuning--;
-				// TODO Draw bar
+				drw_tun(mcn->tuning);
 				xil_printf("%d\n\r", mcn->tuning);
 			}
 			break;
 		case RIGHT_SIG:
 			if(mcn->tuning < 460) {
 				mcn->tuning++;
-				// TODO Draw bar
+				drw_tun(mcn->tuning);
 				xil_printf("%d\n\r", mcn->tuning);
 			}
 			break;

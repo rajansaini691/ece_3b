@@ -36,27 +36,31 @@ void drw_clr(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
 	}
 }
 
-static uint8_t prev_vol = 0;
-#define vol2pix(vol) (vol * (DELTA_VOL) / 0xFF + VOL_X1)
-
-void clr_vol(uint8_t vol) {
-	drw_clr(VOL_X1, VOL_Y1, vol2pix(vol), VOL_Y2);
+static uint32_t prev_tun = 420;
+//#define tun2pix(tun) ((tun - TUN_MIN) * (DELTA_TUN) / TUN_RANGE + TUN_X1)
+uint32_t tun2pix(uint32_t tun) {
+	return ((tun - TUN_MIN) * (DELTA_TUN) / TUN_RANGE + TUN_X1);
 }
 
-void init_vol(uint8_t vol) {
-	prev_vol = 0;
-	drw_vol(vol);
+void clr_tun() {
+	drw_clr(TUN_X1, TUN_Y1, TUN_X2 + TUN_WIDTH, TUN_Y2);
 }
 
-void drw_vol(uint8_t vol) {
-	if(vol == prev_vol) return;
-	setColor((VOL_COL >> 16) & 0xFF, (VOL_COL >> 8) & 0xFF, VOL_COL & 0xFF);
-	if(vol > prev_vol) {
-		fillRect(vol2pix(prev_vol), VOL_Y1, vol2pix(vol), VOL_Y2);
-	} else {
-		drw_clr(vol2pix(vol), VOL_Y1, vol2pix(prev_vol), VOL_Y2);
-	}
-	prev_vol = vol;
+void init_tun(uint32_t tun) {
+	setColor((TUN_COL >> 16) & 0xFF, (TUN_COL >> 8) & 0xFF, TUN_COL & 0xFF);
+	fillRect(TUN_X1, TUN_Y1, TUN_X2, TUN_Y2);
+	drw_tun(tun);
+}
+
+void drw_tun(uint32_t tun) {
+	if(tun == prev_tun) return;
+	setColor((TUN_COL >> 16) & 0xFF, (TUN_COL >> 8) & 0xFF, TUN_COL & 0xFF);
+	fillRect(tun2pix(prev_tun), TUN_Y1, tun2pix(prev_tun) + TUN_WIDTH, TUN_Y2);
+
+	setColor((TUN_SEL_COL >> 16) & 0xFF, (TUN_SEL_COL >> 8) & 0xFF, TUN_SEL_COL & 0xFF);
+	fillRect(tun2pix(tun), TUN_Y1, tun2pix(tun) + TUN_WIDTH, TUN_Y2);
+	//xil_printf("%d\n\r", tun2pix(tun));
+	prev_tun = tun;
 }
 
 // x-coord of left side
