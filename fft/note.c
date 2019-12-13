@@ -5,11 +5,13 @@
 static char notes[12][3]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 
 //finds and prints note of frequency and deviation from note
-void findNote(float f) {
+note_data findNote(float f) {
 	float c=261.63;
 	float r;
 	int oct=4;
 	int note=0;
+	note_data data;
+
 	//determine which octave frequency is in
 	if(f >= c) {
 		while(f > c*2) {
@@ -34,25 +36,18 @@ void findNote(float f) {
 		note++;
 	}
 
-   /*
 	//determine which note frequency is closest to
 	if((f-c) <= (r-f)) { //closer to left note
-		WriteString("N:");
-		WriteString(notes[note]);
-		WriteInt(oct);
-		WriteString(" D:+");
-		WriteInt((int)(f-c+.5));
-		WriteString("Hz");
+		data.cents = (int) (f - c + 0.5) / 100;
 	}
 	else { //f closer to right note
 		note++;
 		if(note >=12) note=0;
-		WriteString("N:");
-		WriteString(notes[note]);
-		WriteInt(oct);
-		WriteString(" D:-");
-		WriteInt((int)(r-f+.5));
-		WriteString("Hz");
+		data.cents = (int) (r - f + 0.5) / 100;
 	}
-   */
+
+	data.note = notes[note];
+	data.oct = oct;
+
+	return data;
 }
