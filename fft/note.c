@@ -1,16 +1,14 @@
 #include "note.h"
+#include <math.h>
 //#include "lcd.h"
 
 //array to store note names for findNote
 static char notes[12][3]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 
 //finds and prints note of frequency and deviation from note
-note_data findNote(float f) {
+int findOctave(float f) {
 	float c=261.63;
-	float r;
 	int oct=4;
-	int note=0;
-	note_data data;
 
 	//determine which octave frequency is in
 	if(f >= c) {
@@ -27,6 +25,14 @@ note_data findNote(float f) {
 	
 	}
 
+	return oct;
+}
+
+int findCents(float f) {
+	float c=261.63;
+	float r;
+	int note=0;
+
 	//find note below frequency
 	//c=middle C
 	r=c*root2;
@@ -36,18 +42,21 @@ note_data findNote(float f) {
 		note++;
 	}
 
+
 	//determine which note frequency is closest to
 	if((f-c) <= (r-f)) { //closer to left note
-		data.cents = (int) (f - c + 0.5) / 100;
+		return (int) (f - c + 0.5) / 100;
 	}
 	else { //f closer to right note
 		note++;
 		if(note >=12) note=0;
-		data.cents = (int) (r - f + 0.5) / 100;
+		return (int) (r - f + 0.5) / 100;
 	}
+}
 
-	data.note = &(notes[note]);
-	data.oct = oct;
-
-	return data;
+int findNote(float f) {
+	// TODO Precompute log400
+	// TODO don't hardcode 440
+	int n = (int)((12 * (log2(f) - log2(440)) + 57.5)) % 12;
+	return n;
 }

@@ -3,7 +3,7 @@
 void hsm_ctor(void);
 // 2 seconds  * ticks per second
 #define CFG_TIMEOUT 2
-#include "fft/note.c"
+#include "fft/note.h"
 
 
 enum hsm_sig {
@@ -23,12 +23,12 @@ enum hsm_sig {
 typedef struct hsmTag {               //Lab2A State machine
 	QActive super_; // inheritance from QP
 	uint32_t disp_tmr; // display timer
-	char* note;
 	uint16_t ticks;
 	uint8_t octave;
 	uint32_t tuning;
 	uint32_t color;
-	note_data n_data;
+	int cents;	// -100 - 100
+	int note; // 0 - 11
 } hsm;
 
 hsm machine;

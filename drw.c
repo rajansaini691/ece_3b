@@ -13,11 +13,13 @@
 
 void drw_txt(char* text) {
 	setFont(BigFont);
+	setColor(0x99, 0x99, 0x99);
+	setColorBg(0x00, 0x00, 0x00);
 	lcdPrint(text, LCD_WIDTH / 2 - 8, LCD_HEIGHT / 2 - 8);
 }
 
 void clr_txt(void) {
-	drw_clr(LCD_WIDTH / 2 - 16, LCD_HEIGHT / 2 - 16, LCD_WIDTH / 2 + 16, LCD_HEIGHT / 2 + 16);
+	drw_clr(LCD_WIDTH / 2 - 16, LCD_HEIGHT / 2 - 16, LCD_WIDTH / 2 + 48, LCD_HEIGHT / 2 + 16);
 }
 
 void drw_clr(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {

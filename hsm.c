@@ -58,13 +58,18 @@ QState hsm_listen(hsm *mcn) {
 		case RIGHT_BTN_SIG:
 			return Q_TRAN(hsm_oct_cfg);
 		case FFT_SIG: {
-			float reading = freq_get();
+			float reading = 1;//freq_get();
 			if((int) reading) {
 				// do stuff with fft
 				xil_printf("FFT reading: %d\n\r", (int) reading);
-				sample_start();
-				mcn->n_data = findNote(reading);	
-				drw_txt(mcn->n_data);
+				//sample_start();
+				mcn->note = findNote(reading);
+				mcn->cents = findCents(reading);
+
+				static char notes[12][3]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+				clr_txt();
+				drw_txt(notes[mcn->note]);
+				xil_printf(notes[mcn->note]);
 				drw_dial(mcn->cents);
 			}
 			QActive_post((QActive*) mcn, FFT_SIG);

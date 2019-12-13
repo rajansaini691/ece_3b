@@ -21,12 +21,14 @@ Returns
 
 #define root2 1.0594631 //twelfth root of 2
 
-void findNote(float f);
-
-typedef struct note_data {
+struct note_data {
 	int cents;
 	char* note;
 	int oct;
-} note_data;
+};
+
+int findNote(float f);
+int findCents(float f);
+int findOctave(float f);
 
 #endif
