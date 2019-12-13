@@ -42,19 +42,6 @@ QState hsm_listen(hsm *mcn) {
 		case Q_EXIT_SIG:
 			clr_txt();
 			return Q_HANDLED();
-		case TICK_SIG:
-			// Wait 50 ms (simulate FFT)
-
-			// Determine color (no idea how this will turn out)
-			mcn->color += 1;
-			mcn->color &= 0xFF;
-			mcn->color |= ~(mcn->color & 0xFF) << 8;
-			mcn->color |= (mcn->color & 0xFF) << 16;
-
-			// Draw colored word (obviously more sensibly than this)
-			setColor(mcn->color >> 16 & 0xFF, ~(mcn->color >> 8 & 0xFF), mcn->color & 0xFF);
-			drw_txt("A");
-			return Q_HANDLED();
 		case LEFT_SIG:
 			return Q_TRAN(hsm_tun_cfg);
 		case RIGHT_SIG:
@@ -63,7 +50,20 @@ QState hsm_listen(hsm *mcn) {
 			return Q_TRAN(hsm_oct_cfg);
 		case RIGHT_BTN_SIG:
 			return Q_TRAN(hsm_oct_cfg);
-
+		case FFT_SIG: {
+			float reading = freq_get();
+			if((int) reading) {
+				// do stuff with fft
+				xil_printf("FFT reading: %d\n\r", (int) reading);
+				sample_start();
+			}
+			QActive_post((QActive*) &mcn, FFT_SIG);
+			drw_txt("A");
+			return Q_HANDLED();
+		}
+		case TICK_SIG: {
+			return Q_HANDLED();
+		}
 	}
 	return Q_SUPER(hsm_on);
 }

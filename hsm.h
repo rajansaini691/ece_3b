@@ -15,7 +15,8 @@ enum hsm_sig {
 	C_SIG,
 	D_SIG,
 	E_SIG,
-	TICK_SIG
+	TICK_SIG,
+	FFT_SIG
 };
 
 typedef struct hsmTag {               //Lab2A State machine
