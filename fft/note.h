@@ -28,7 +28,7 @@ struct note_data {
 };
 
 //array to store note names for findNote
-static char notes[12][3]={"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+static char notes[12][3]={"C ","C#","D ","D#","E ","F ","F#","G ","G#","A ","A#","B "};
 
 int findNote(float f);
 int findCents(float f);

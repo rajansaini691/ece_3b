@@ -7,7 +7,7 @@ void drw_tun(uint32_t tun);
 void clr_tun();
 void clr_txt();
 void init_tun(uint32_t tun);
-void drw_txt(char* text);
+void drw_note(char* note, uint16_t hz, int cents);
 void drw_dot(uint8_t oct);
 void drw_oct_sel(uint8_t oct);
 

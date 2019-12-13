@@ -44,6 +44,10 @@ void enc_handler(void *baseaddr_p) {
 
 	switch(dsr & 0b11) {
 		case 0b11:
+			if(((QActive*)&machine)->nUsed>25) {
+				curstate=REST;
+				break;
+			}
 			if(curstate == CW_T2) {
 				if(dsr & 0x04) { 
 					QActive_postISR((QActive *) &machine, LEFT_SIG);

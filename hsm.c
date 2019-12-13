@@ -66,7 +66,7 @@ QState hsm_listen(hsm *mcn) {
 				int f = findCents(reading);
 				xil_printf("%d\n\r", f);
 				int note = findNote(reading);	
-				drw_txt(notes[note]);
+				drw_note(notes[note], (int) reading, f);
 				xil_printf(notes[note]);
 			}
 			QActive_post((QActive*) mcn, FFT_SIG);
