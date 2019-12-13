@@ -117,6 +117,7 @@ QState hsm_tun_cfg(hsm *mcn) {
 			if(mcn->tuning > 420) {
 				mcn->tuning--;
 				drw_tun(mcn->tuning);
+				set_a(mcn->tuning);
 				xil_printf("%d\n\r", mcn->tuning);
 			}
 			break;
@@ -124,6 +125,7 @@ QState hsm_tun_cfg(hsm *mcn) {
 			if(mcn->tuning < 460) {
 				mcn->tuning++;
 				drw_tun(mcn->tuning);
+				set_a(mcn->tuning);
 				xil_printf("%d\n\r", mcn->tuning);
 			}
 			break;
@@ -144,12 +146,14 @@ QState hsm_oct_cfg(hsm *mcn) {
 		case LEFT_BTN_SIG:
 			if(mcn->octave > 0) {
 				mcn->octave--;
+				set_octave(mcn->octave);
 				drw_dot(mcn->octave);
 			}
 			break;
 		case RIGHT_BTN_SIG:
 			if(mcn->octave < 9) {
 				mcn->octave++;
+				set_octave(mcn->octave);
 				drw_dot(mcn->octave);
 			}
 			break;
