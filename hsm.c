@@ -42,8 +42,10 @@ QState hsm_on(hsm *mcn) {
 QState hsm_listen(hsm *mcn) {
 	switch (Q_SIG(mcn)) {
 		case Q_ENTRY_SIG:
+			drw_bar();
 			return Q_HANDLED();
 		case Q_EXIT_SIG:
+			clr_bar();
 			clr_txt();
 			return Q_HANDLED();
 		case LEFT_SIG:
@@ -63,6 +65,7 @@ QState hsm_listen(hsm *mcn) {
 			}
 			QActive_post((QActive*) mcn, FFT_SIG);
 			drw_txt("A");
+			drw_dial(17);
 			return Q_HANDLED();
 		}
 		case TICK_SIG: {

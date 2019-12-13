@@ -30,3 +30,14 @@ void drw_oct_sel(uint8_t oct);
 #define TUN_Y2 (TUN_Y1 + TUN_HEIGHT)
 #define TUN_COL 0xFFFFFF
 #define TUN_SEL_COL 0x000000
+
+// Tuning bar
+#define BAR_MIN -100
+#define BAR_MAX 100
+#define BAR_RANGE 200
+#define BAR_X1 TUN_X1
+#define BAR_X2 TUN_X2
+#define DELTA_BAR DELTA_TUN
+#define BAR_Y 2 * LCD_HEIGHT / 3
+#define DIAL_HEIGHT 10
+#define BAR_COL 0xFFFFFF
