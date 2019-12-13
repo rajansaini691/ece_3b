@@ -63,10 +63,11 @@ QState hsm_listen(hsm *mcn) {
 				// do stuff with fft
 				xil_printf("FFT reading: %d\n\r", (int) reading);
 				sample_start();
+				mcn->n_data = findNote(reading);	
+				drw_txt(mcn->n_data);
+				drw_dial(mcn->cents);
 			}
 			QActive_post((QActive*) mcn, FFT_SIG);
-			drw_txt("A");
-			drw_dial(17);
 			return Q_HANDLED();
 		}
 		case TICK_SIG: {

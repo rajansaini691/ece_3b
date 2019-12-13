@@ -46,7 +46,7 @@ note_data findNote(float f) {
 		data.cents = (int) (r - f + 0.5) / 100;
 	}
 
-	data.note = notes[note];
+	data.note = &(notes[note]);
 	data.oct = oct;
 
 	return data;

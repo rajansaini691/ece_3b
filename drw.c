@@ -102,7 +102,10 @@ void drw_dot(uint8_t oct) {
 void drw_oct_sel(uint8_t oct) {
 	setColor((DOT_COL >> 16) & 0xFF, (DOT_COL >> 8) & 0xFF, DOT_COL & 0xFF);
 	for(int i = 0; i < NUM_DOTS; i++) {
+		setColor((DOT_BDR >> 16) & 0xFF, (DOT_BDR >> 8) & 0xFF, DOT_BDR & 0xFF);
 		fillRect(oct2pix(i), DOT_Y, oct2pix(i) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
+		setColor((DOT_COL >> 16) & 0xFF, (DOT_COL >> 8) & 0xFF, DOT_COL & 0xFF);
+		fillRect(oct2pix(i) + 2, DOT_Y + 2, oct2pix(i) + DOT_HEIGHT - 2, DOT_Y + DOT_HEIGHT - 2);
 	}
 	drw_dot(oct);
 }
