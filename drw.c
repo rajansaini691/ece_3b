@@ -73,8 +73,10 @@ void drw_dot(uint8_t oct) {
 	uint8_t x = oct2pix(oct);
 
 	// Reset last dot
-	setColor((DOT_COL >> 16) & 0xFF, (DOT_COL >> 8) & 0xFF, DOT_COL & 0xFF);
+	setColor((DOT_BDR >> 16) & 0xFF, (DOT_BDR >> 8) & 0xFF, DOT_BDR & 0xFF);
 	fillRect(oct2pix(prev_oct), DOT_Y, oct2pix(prev_oct) + DOT_HEIGHT, DOT_Y + DOT_HEIGHT);
+	setColor((DOT_COL >> 16) & 0xFF, (DOT_COL >> 8) & 0xFF, DOT_COL & 0xFF);
+	fillRect(oct2pix(prev_oct) + 2, DOT_Y + 2, oct2pix(prev_oct) + DOT_HEIGHT - 2, DOT_Y + DOT_HEIGHT - 2);
 
 	// Mark current dot as selected
 	setColor((DOT_SEL_COL >> 16) & 0xFF, (DOT_SEL_COL >> 8) & 0xFF, DOT_SEL_COL & 0xFF);

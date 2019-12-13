@@ -14,12 +14,14 @@ void drw_decoration();
 void drw_dial(int16_t cents);
 void drw_bar();
 
+
 // top y-coord of the dot row
 #define NUM_DOTS 10
 #define DOT_Y (3 * LCD_HEIGHT / 4)
 #define DOT_HEIGHT (LCD_HEIGHT / 20)
 #define DOT_SEL_COL 0xFFFFFF
 #define DOT_COL 0x000000	// Unselected color
+#define DOT_BDR 0xFFFFFF    // Unselected color border
 
 #define TUN_MIN 420
 #define TUN_MAX 460
