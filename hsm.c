@@ -34,6 +34,8 @@ QState hsm_on(hsm *mcn) {
 			return Q_TRAN(hsm_listen);
 	}
 
+	QActive_postISR((QActive*) mcn, FFT_SIG);
+	sample_start();
 	return Q_SUPER(&QHsm_top);
 }
 
@@ -59,7 +61,7 @@ QState hsm_listen(hsm *mcn) {
 				xil_printf("FFT reading: %d\n\r", (int) reading);
 				sample_start();
 			}
-			QActive_post((QActive*) &mcn, FFT_SIG);
+			QActive_post((QActive*) mcn, FFT_SIG);
 			drw_txt("A");
 			return Q_HANDLED();
 		}
