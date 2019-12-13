@@ -6,7 +6,7 @@ static float new_im[512];
 #define BIN 95.367431640625
 
 // n - 512 (buffer size)
-float fft(float* q, float* w, int n, int m, float sample_f) {
+float fft(float* q, float* w, int n, int m, float sample_f, float low, float high) {
 	int a,b,r,d,e,c;
 	int k,place;
 	a=n/2;
@@ -76,7 +76,9 @@ float fft(float* q, float* w, int n, int m, float sample_f) {
 	//find magnitudes
 	max=0;
 	place=1;
-	for(i=1;i<(n/2);i++) { 
+	int low_bin = (int) ((low + .5)/ BIN);
+	int high_bin = (int) ((high + .5)/ BIN);
+	for(i=low_bin; i<high_bin && i<(n/2); i++) {
 		new_[i]=q[i]*q[i]+w[i]*w[i];
 		if(max < new_[i]) {
 			max=new_[i];
