@@ -3,6 +3,8 @@
 #include "bsp.h"
 #include "hsm.h"
 #include "lib/lcd.h"
+#include "fft/fft.h"
+#include "fft/freq.h"
 
 static QState hsm_init(hsm *mcn);
 static QState hsm_on(hsm *mcn);
